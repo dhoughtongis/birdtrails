@@ -16,7 +16,7 @@ def generate_handles(labels, colors, edge='k', alpha=1):
         handles.append(mpatches.Rectangle((0, 0), 1, 1, facecolor=colors[i % lc], edgecolor=edge, alpha=alpha))
     return handles
 
-# create a scale bar of length 20 km in the upper right corner of the map (change to 50km)
+# create a scale bar of length 50km
 # adapted this question: https://stackoverflow.com/q/32333870
 # answered by SO user Siyh: https://stackoverflow.com/a/35705477
 def scale_bar(ax, location=(0.92, 0.95)):
@@ -24,13 +24,13 @@ def scale_bar(ax, location=(0.92, 0.95)):
     sbx = x0 + (x1 - x0) * location[0]
     sby = y0 + (y1 - y0) * location[1]
 
-    ax.plot([sbx, sbx - 20000], [sby, sby], color='k', linewidth=9, transform=ax.projection)
-    ax.plot([sbx, sbx - 10000], [sby, sby], color='k', linewidth=6, transform=ax.projection)
-    ax.plot([sbx-10000, sbx - 20000], [sby, sby], color='w', linewidth=6, transform=ax.projection)
+    ax.plot([sbx, sbx - 200000], [sby, sby], color='k', linewidth=9, transform=ax.projection)
+    ax.plot([sbx, sbx - 100000], [sby, sby], color='k', linewidth=6, transform=ax.projection)
+    ax.plot([sbx-100000, sbx - 200000], [sby, sby], color='w', linewidth=6, transform=ax.projection)
 
-    ax.text(sbx, sby-4500, '20 km', transform=ax.projection, fontsize=8)
-    ax.text(sbx-12500, sby-4500, '10 km', transform=ax.projection, fontsize=8)
-    ax.text(sbx-24500, sby-4500, '0 km', transform=ax.projection, fontsize=8)
+    ax.text(sbx, sby-42000, '200 km', transform=ax.projection, fontsize=6)
+    ax.text(sbx-102500, sby-42000, '100 km', transform=ax.projection, fontsize=6)
+    ax.text(sbx-204500, sby-42000, '0 km', transform=ax.projection, fontsize=6)
 
 # load the outline of NZ for a backdrop
 outline = gpd.read_file(os.path.abspath('data/NZ_outline.shp'))
@@ -53,6 +53,11 @@ ax.set_extent([xmin-5000, xmax+5000, ymin-5000, ymax+5000], crs=myCRS) # because
 # gives output as xmin, ymin, xmax, ymax,
 # but set_extent takes xmin, xmax, ymin, ymax, we re-order the coordinates here.
 
+# add the scale bar to the axis
+scale_bar(ax)
+
 myFig ## re-draw the figure
+
+
 
 myFig.savefig('map.png', bbox_inches='tight', dpi=300)
