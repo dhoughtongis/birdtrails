@@ -96,11 +96,18 @@ grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
 
 # Check if and where the selected track intersects the grid
 
-
+# reset the index of gdf2
+# milford = milford.reset_index(drop=True)
+# set the index of gdf2 to be the same as gdf1
+# milford.index = grid.index
 
 # Find the intersection between the line and the polygon
-intersection = grid.intersects(milford)
+intersection = grid.intersects(milford.unary_union)
 print(intersection,  file=open('log.txt', 'w'))
+
+print(milford.index)
+print(grid.index)
+
 
 
 

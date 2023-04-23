@@ -96,11 +96,18 @@ grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
 
 # Check if and where the selected track intersects the grid
 
-
+# reset the index of gdf2
+# milford = milford.reset_index(drop=True)
+# set the index of gdf2 to be the same as gdf1
+# milford.index = grid.index
 
 # Find the intersection between the line and the polygon
-intersection = grid.intersects(milford)
+intersection = grid.intersects(milford.unary_union)
 print(intersection,  file=open('log.txt', 'w'))
+
+print(milford.index)
+print(grid.index)
+
 
 
 
@@ -114,6 +121,16 @@ plt.title('Grid intersection)')
 
 # add the scale bar to the axis
 scale_bar(ax)
+
+# format a legend using proxy shapes
+intersect_true = mpatches.Rectangle((0, 0), 1, 1, facecolor="k")
+intersect_false = mpatches.Rectangle((0, 0), 1, 1, facecolor="lightgray")
+labels = ['Grid square intersects \nwwalking track',
+   'Grid square does not \nintersect walking track']
+plt.legend([intersect_true, intersect_false], labels,
+   loc='lower right', bbox_to_anchor=(1, 0), fancybox=True)
+
+
 
 myFig ## re-draw the figure
 
