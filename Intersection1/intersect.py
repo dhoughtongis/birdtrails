@@ -115,6 +115,16 @@ plt.title('Grid intersection)')
 # add the scale bar to the axis
 scale_bar(ax)
 
+# format a legend using proxy shapes
+intersect_true = mpatches.Rectangle((0, 0), 1, 1, facecolor="k")
+intersect_false = mpatches.Rectangle((0, 0), 1, 1, facecolor="lightgray")
+labels = ['Grid square intersects \nwwalking track',
+   'Grid square does not \nintersect walking track']
+plt.legend([intersect_true, intersect_false], labels,
+   loc='lower right', bbox_to_anchor=(1, 0), fancybox=True)
+
+
+
 myFig ## re-draw the figure
 
 myFig.savefig('Milford_map.png', bbox_inches='tight', dpi=300)
