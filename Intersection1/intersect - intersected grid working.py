@@ -91,7 +91,7 @@ grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
 intersection = grid.intersects(milford.unary_union)
 # print(intersection,  file=open('log.txt', 'w')) # create a .txt file containing the full boolean list for troubleshooting
 
-# identify and print the grid rows that intersect line. Add +1 to compensate for row 0.
+# identify and print the grid rows that intersect line. Add +1 to compensate for row difference.
 print('Intersected grid IDs:')
 intersect_id = [i + 1 for i, val in enumerate(intersection) if val]
 print(intersect_id)
@@ -135,4 +135,18 @@ myFig.savefig('Milford_map.png', bbox_inches='tight', dpi=300)
 
 # Bird stats
 
-print(grid.iloc[intersect_id, [20, 23]])
+# Select the columns you want to print
+columns_to_print = ['belbir', 'bitaus', 'brocre', 'cooaus', 'cuclon', 'cucshi', 'dabchi', 'dotban', 'dotnz',
+                    'ducblu', 'falcon', 'fantai', 'ferbir', 'grecre', 'gulbba', 'gulbbi', 'gulred', 'harrie',
+                    'herree', 'herwfa', 'herwhi', 'kaka', 'kea', 'kinfis', 'kiwbro', 'kokako', 'morpor',
+                    'oyssip', 'oysvar', 'parspp', 'pignz', 'pipit', 'plospu', 'pukeko', 'rifman', 'robnz',
+                    'scanz', 'shabl', 'shalbl', 'shalit', 'shapie', 'shaspo', 'shaste', 'shepar', 'shonz',
+                    'sileye', 'sporoy', 'stibla', 'stipie', 'swabla', 'swawel', 'teabro', 'teagre', 'terbla',
+                    'tercas', 'terwhi', 'tomtit', 'tui', 'wargre', 'weka', 'whihea', 'wreroc', 'wrybil', 'yelhea']
+
+# Print the selected columns for each intercepted grid cell
+for index, row in intersect_id.iterrows():
+    print(f"Grid {row['TARGET_FID']}:", end=" ")
+    for column in columns_to_print:
+        print(f"{column}: {row[column]}", end=" ")
+    print("")
