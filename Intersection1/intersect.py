@@ -8,10 +8,16 @@ import cartopy.io.shapereader as shpreader
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 
+
+
+userselected = 'Hooker Valley Track'
+
+
+
 # The intersection data is being truncated
 # This -should- stop that. From https://www.geeksforgeeks.org/how-to-print-an-entire-pandas-dataframe-in-python/
-pd.set_option('display.max_rows', 3000)
-pd.set_option('display.max_columns', 3)
+pd.set_option('display.max_rows', 3000) 
+pd.set_option('display.max_columns', 65)
 
 plt.ion() # make the plotting interactive
 
@@ -70,10 +76,10 @@ trails_feat = ShapelyFeature(trails['geometry'],  # first argument is the geomet
  linewidth=0.2)  # set the linewidth to be 0.2 pt
 
 # trying to highlight selected track example is milford track
-milford = trails[(trails.name == 'Milford Track')]
+selected_trail = trails[(trails.name == userselected)]
 
 
-selected_feat = ShapelyFeature(milford['geometry'],  # first argument is the geometry
+selected_feat = ShapelyFeature(selected_trail['geometry'],  # first argument is the geometry
  myCRS,  # second argument is the CRS
  edgecolor='red',  # set the edgecolor to be royalblue
  facecolor='none',  # hopefully stops the multi-line being filled in
@@ -88,16 +94,16 @@ grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
  edgecolor='lightgray')
 
 # Find the intersection between the line and the polygon, save boolean of data as txt doc.
-intersection = grid.intersects(milford.unary_union)
+intersection = grid.intersects(selected_trail.unary_union)
 # print(intersection,  file=open('log.txt', 'w')) # create a .txt file containing the full boolean list for troubleshooting
 
-# identify and print the grid rows that intersect line. Add +1 to compensate for row 0.
+# identify and print the grid rows that intersect line.
 print('Intersected grid IDs:')
-intersect_id = [i + 1 for i, val in enumerate(intersection) if val]
+intersect_id = [i for i, val in enumerate(intersection) if val]
 print(intersect_id)
 
 # create feature to highlight grids intercepted by track
-intercepted_grids = grid[grid.TARGET_FID.isin(intersect_id)]
+intercepted_grids = grid[grid.index.isin(intersect_id)]
 
 intercepted_grids2 = ShapelyFeature(intercepted_grids['geometry'],  # first argument is the geometry
  myCRS,  # second argument is the CRS
@@ -112,7 +118,7 @@ ax.add_feature(intercepted_grids2)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
 
 # add the title to the map, need to configure to display specifics
-plt.title('Grid intersection')
+plt.title(f'{userselected} map')
 
 # add the scale bar to the axis
 scale_bar(ax)
@@ -129,10 +135,16 @@ plt.legend([intersect_true, intersect_false], labels,
 
 myFig ## re-draw the figure
 
-myFig.savefig('Milford_map.png', bbox_inches='tight', dpi=300)
+myFig.savefig(f'{userselected} overview.png', bbox_inches='tight', dpi=300)
 
+# Track details
+
+print("\nTrack details") 
 
 
 # Bird stats
 
-print(grid.iloc[intersect_id, [20, 23]])
+print("\nBird statistics") 
+print(grid.iloc[intersect_id, 10:73] * 100) 
+
+
