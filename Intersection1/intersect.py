@@ -1,17 +1,12 @@
 import os
 import pandas as pd
 import geopandas as gpd
-import numpy as np
-import rasterio as rio
-from rasterio.plot import show
 import matplotlib.pyplot as plt
 from cartopy.feature import ShapelyFeature
 import cartopy.crs as ccrs
 import cartopy.io.shapereader as shpreader
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
-from matplotlib import colors
-
 
 # The intersection data is being truncated
 # This -should- stop that. From https://www.geeksforgeeks.org/how-to-print-an-entire-pandas-dataframe-in-python/
@@ -22,7 +17,7 @@ plt.ion() # make the plotting interactive
 
 # generate matplotlib handles to create a legend of the features we put in our map.
 def generate_handles(labels, colors, edge='k', alpha=1):
-    lc = len(colors)  # get the length of the colort list
+    lc = len(colors)  # get the length of the color list
     handles = []
     for i in range(len(labels)):
         handles.append(mpatches.Rectangle((0, 0), 1, 1, facecolor=colors[i % lc], edgecolor=edge, alpha=alpha))
@@ -56,27 +51,6 @@ outline = gpd.read_file(os.path.abspath('data/NZ_outline.shp'))
 grid = gpd.read_file(os.path.abspath('data/SpeciesData.shp'))
 trails = gpd.read_file(os.path.abspath('data/Trails.shp'))
 
-
-
-#since your values are from 0 to 4, you want the color bins to be at 0.5 increments
-levels = [0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5]
-clrs = ['white','black','green','blue','red','violet','orange'] 
-cmap, norm = colors.from_levels_and_colors(levels, clrs)
-
-
-
-# load the land use data set
-ludata = rio.open("data/lu/land_use_200m.tif")
-# print(ludata.meta) # print meta data for land use data
-
-
-# plot land use data as a basemap
-basemap = show(ludata, cmap=cmap, ax=ax, norm=norm)
-
-# display land use 
-
-
-
 # NZ outline added using cartopys ShapelyFeature
 outline_feature = ShapelyFeature(outline['geometry'], myCRS, edgecolor='k', facecolor='w')
 xmin, ymin, xmax, ymax = outline.total_bounds
@@ -86,6 +60,7 @@ ax.add_feature(outline_feature) # add the features we've created to the map.
 ax.set_extent([xmin-5000, xmax+5000, ymin-5000, ymax+5000], crs=myCRS) # because total_bounds 
 # gives output as xmin, ymin, xmax, ymax,
 # but set_extent takes xmin, xmax, ymin, ymax, we re-order the coordinates here.
+
 
 
 trails_feat = ShapelyFeature(trails['geometry'],  # first argument is the geometry
@@ -112,26 +87,31 @@ grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
  alpha=0.75, # set the alpha (transparency) to be 0.25 (out of 1)
  edgecolor='lightgray')
 
-# intersection = ShapelyFeature(grid['geometry'].intersects(milford.unary_union),  # first argument is the geometry
-#  myCRS,  # second argument is the CRS
-#  facecolor='coral',  # sets the face color to coral, hopefully
-#  linewidth=0.2,  # set the outline width to be 1 pt
-#  alpha=0.75, # set the alpha (transparency) to be 0.25 (out of 1)
-#  edgecolor='k') if 'True' else None
-
 # Find the intersection between the line and the polygon, save boolean of data as txt doc.
-# intersection = grid.intersects(milford.unary_union)
-# print(intersection,  file=open('log.txt', 'w'))
+intersection = grid.intersects(milford.unary_union)
+# print(intersection,  file=open('log.txt', 'w')) # testing intersect boolean
+print('Intersected grid IDs:')
+intersect_id = [i +  1 for i, val in enumerate(intersection) if val]
+print(intersect_id)
+
+
+intercepted_grids = grid[grid.TARGET_FID.isin(intersect_id)]
+
+intercepted_grids2 = ShapelyFeature(intercepted_grids['geometry'],  # first argument is the geometry
+ myCRS,  # second argument is the CRS
+ edgecolor='red',  # set the edgecolor to be royalblue
+ facecolor='none',  # hopefully stops the multi-line being filled in
+ linewidth=1)  # set the linewidth to be 0.2 pt
+
+print(grid.columns)
 
 ax.add_feature(grid_feat)  # add the collection of features to the map
 ax.add_feature(trails_feat)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
-
-
-# ax.add_feature(intersection)  # add the collection of features to the map
+ax.add_feature(intercepted_grids2)  # add the collection of features to the map
 
 # add the title to the map, need to configure to display specifics
-plt.title('Grid intersection)')
+plt.title('Grid intersection')
 
 # add the scale bar to the axis
 scale_bar(ax)
