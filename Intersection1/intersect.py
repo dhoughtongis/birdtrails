@@ -83,38 +83,28 @@ selected_feat = ShapelyFeature(milford['geometry'],  # first argument is the geo
  linewidth=1)  # set the linewidth to be 0.2 pt
 
 
-
 grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
-  myCRS,  # second argument is the CRS
-  facecolor='coral',  # sets the face color to coral, hopefully
-  linewidth=0.2,  # set the outline width to be 1 pt
-  alpha=0.75, # set the alpha (transparency) to be 0.25 (out of 1)
-  edgecolor='k' 
-)  
-# Don't know why the below isn't working 
-# if ShapelyFeature(milford['geometry'],myCRS).intersects(ShapelyFeature(grid['geometry'],myCRS)) else 'lightgray'
+ myCRS,  # second argument is the CRS
+ facecolor='none',  # sets the face color to coral, hopefully
+ linewidth=0.2,  # set the outline width to be 1 pt
+ alpha=0.75, # set the alpha (transparency) to be 0.25 (out of 1)
+ edgecolor='lightgray')
 
-# Check if and where the selected track intersects the grid
+intersection = ShapelyFeature(grid['geometry'].intersects(milford.unary_union),  # first argument is the geometry
+ myCRS,  # second argument is the CRS
+ facecolor='coral',  # sets the face color to coral, hopefully
+ linewidth=0.2,  # set the outline width to be 1 pt
+ alpha=0.75, # set the alpha (transparency) to be 0.25 (out of 1)
+ edgecolor='k') if 'True' else None
 
-# reset the index of gdf2
-# milford = milford.reset_index(drop=True)
-# set the index of gdf2 to be the same as gdf1
-# milford.index = grid.index
-
-# Find the intersection between the line and the polygon
-intersection = grid.intersects(milford.unary_union)
-print(intersection,  file=open('log.txt', 'w'))
-
-print(milford.index)
-print(grid.index)
-
-
-
+# Find the intersection between the line and the polygon, save boolean of data as txt doc.
+# intersection = grid.intersects(milford.unary_union)
+# print(intersection,  file=open('log.txt', 'w'))
 
 ax.add_feature(grid_feat)  # add the collection of features to the map
 ax.add_feature(trails_feat)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
-
+ax.add_feature(intersection)  # add the collection of features to the map
 
 # add the title to the map, need to configure to display specifics
 plt.title('Grid intersection)')
@@ -122,7 +112,7 @@ plt.title('Grid intersection)')
 # add the scale bar to the axis
 scale_bar(ax)
 
-# format a legend using proxy shapes
+# format a legend for the grid and tracks using proxy shapes
 intersect_true = mpatches.Rectangle((0, 0), 1, 1, facecolor="k")
 intersect_false = mpatches.Rectangle((0, 0), 1, 1, facecolor="lightgray")
 labels = ['Grid square intersects \nwwalking track',
