@@ -8,13 +8,13 @@ import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 
 
-grid = gpd.read_file('data/SpeciesData.shp')
+trails = gpd.read_file('data/Trails.shp')
 
 
-m = grid.explore('kea', cmap='Oranges')
+m = trails.explore
 
 
 m # show the map
 
-m.save('Kea_map.html')
+m.save('Trails_map.html')
 

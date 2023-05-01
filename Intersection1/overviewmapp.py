@@ -7,6 +7,8 @@ import cartopy.crs as ccrs
 import cartopy.io.shapereader as shpreader
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import cartopy.mpl.geoaxes
 
 
 
@@ -116,6 +118,11 @@ ax.add_feature(grid_feat)  # add the collection of features to the map
 ax.add_feature(trails_feat)  # add the collection of features to the map
 ax.add_feature(intercepted_grids2)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
+
+ax2 = inset_axes(ax, width="40%", height="40%", loc="upper right", 
+                   axes_class=cartopy.mpl.geoaxes.GeoAxes, 
+                   axes_kwargs=dict(map_projection=cartopy.crs.PlateCarree()))
+ax2.add_feature(cartopy.feature.COASTLINE)
 
 # add the title to the map, need to configure to display specifics
 plt.title(f'{userselected} map')
