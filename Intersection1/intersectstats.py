@@ -7,6 +7,8 @@ import cartopy.crs as ccrs
 import cartopy.io.shapereader as shpreader
 import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
+import rasterio
+from rasterio.plot import show
 
 
 
@@ -14,7 +16,7 @@ userselected = 'Milford Track'
 
 
 
-# The intersection data is being truncated
+# The intersect data is being truncated
 # This -should- stop that. From https://www.geeksforgeeks.org/how-to-print-an-entire-pandas-dataframe-in-python/
 pd.set_option('display.max_rows', 3000) 
 pd.set_option('display.max_columns', 65)
@@ -52,13 +54,17 @@ myCRS = ccrs.UTM(59, southern_hemisphere=True)  # create a Universal Transverse 
 ax = plt.axes(projection=ccrs.NearsidePerspective(satellite_height=10000000.0, central_longitude=-174.88, central_latitude=-40.9))  # finally, create an axes object in the figure, using a UTM projection,
 # where we can actually plot our data.
 
+# load raster data using rasterio
+luraster_path = "data/lu/land_use_200m.tif"
+luraster = rasterio.open(luraster_path)
+
 # load the shapefiles data sets for species, trails and country outline
 outline = gpd.read_file(os.path.abspath('data/NZ_outline.shp'))
 grid = gpd.read_file(os.path.abspath('data/SpeciesData.shp'))
 trails = gpd.read_file(os.path.abspath('data/Trails.shp'))
 
 # NZ outline added using cartopys ShapelyFeature
-outline_feature = ShapelyFeature(outline['geometry'], myCRS, edgecolor='k', facecolor='w')
+outline_feature = ShapelyFeature(outline['geometry'], myCRS, edgecolor='k', facecolor='none')
 xmin, ymin, xmax, ymax = outline.total_bounds
 ax.add_feature(outline_feature) # add the features we've created to the map.
 
@@ -112,6 +118,8 @@ intercepted_grids2 = ShapelyFeature(intercepted_grids['geometry'],  # first argu
  linewidth=0.5)  # set the linewidth to be 0.2 pt
 
 
+show(luraster, ax=ax)
+
 ax.add_feature(grid_feat)  # add the collection of features to the map
 ax.add_feature(trails_feat)  # add the collection of features to the map
 ax.add_feature(intercepted_grids2)  # add the collection of features to the map
@@ -137,14 +145,17 @@ myFig ## re-draw the figure
 
 myFig.savefig(f'{userselected} overview.png', bbox_inches='tight', dpi=300)
 
-# Track details
+# Extract details of selected trails from dataset
 
-print("\nTrack details----------------------") 
-print(f'Name: {userselected}')
+# Convert trail distance from m to km
+traildistance = trails[(trails.name == userselected)].iloc[0, 9] / 1000
+
+print("\nTrail details----------------------") 
+print(f'Name: {userselected}') 
 print(f'Description: {trails[(trails.name == userselected)].iloc[0, 2]}')
 print(f'Difficulty: {trails[(trails.name == userselected)].iloc[0, 3]}')
 print(f'Time: {trails[(trails.name == userselected)].iloc[0, 4]}')
-print(f'Length: {trails[(trails.name == userselected)].iloc[0, 9]}m')
+print(f'Length: {traildistance.round(2)} km')
 print(f'More information: {trails[(trails.name == userselected)].iloc[0, 7]}')
 
 # Bird stats
@@ -157,7 +168,7 @@ birdstats.loc['Avg'] = birdstats.iloc[:, 1:].mean().round(2)
 
 print("\nBird statistics (%)----------------------") 
 sorted_birdstats = birdstats.sort_values(by='Avg', axis=1, ascending=False)
-top10 = sorted_birdstats.loc['Avg'].head(10)
-print(top10)
+toplist = sorted_birdstats.loc['Avg'].head(15)
+print(toplist)
 
 
