@@ -177,12 +177,7 @@ ax.add_feature(selected_feat)  # add the collection of features to the map
 
 
 
-# Create the table
-table_data = [toplist]
-table = ax.table(cellText=table_data, loc='upper left', cellLoc='center', colLabels=None)
-table.auto_set_font_size(False)
-table.set_fontsize(12)
-table.scale(1, 1.5)  # Adjust the table size if needed
+
 
 
 

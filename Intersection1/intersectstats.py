@@ -86,7 +86,8 @@ ax = plt.axes(projection=ccrs.NearsidePerspective(satellite_height=10000000.0, c
 # load the shapefiles data sets for species, trails and country outline
 outline = gpd.read_file(os.path.abspath('data/NZ_outline.shp'))
 grid = gpd.read_file(os.path.abspath('data/SpeciesData.shp'))
-bird_details = pd.read_csv('data/SpeciesAttributes.csv') # Load the CSV file containing the column names mapping
+land_use = gpd.read_file(os.path.abspath('data/lu/LandUse.shp'))
+bird_details = pd.read_csv('data/SpeciesAttributes.csv') # species attributes for table linking
 
 
 # Create a dictionary from the column names mapping DataFrame
@@ -107,6 +108,7 @@ ax.set_extent([xmin-5000, xmax+5000, ymin-5000, ymax+5000], crs=myCRS) # because
 
 
 
+
 trails_feat = ShapelyFeature(trails['geometry'],  # first argument is the geometry
  myCRS,  # second argument is the CRS
  edgecolor='tan',  # set the edgecolor to be royalblue
@@ -114,13 +116,27 @@ trails_feat = ShapelyFeature(trails['geometry'],  # first argument is the geomet
  linewidth=0.2)  # set the linewidth to be 0.2 pt
 
 
-
-
 selected_feat = ShapelyFeature(selected_trail['geometry'],  # first argument is the geometry
  myCRS,  # second argument is the CRS
  edgecolor='red',  # set the edgecolor to be royalblue
  facecolor='none',  # hopefully stops the multi-line being filled in
  linewidth=1)  # set the linewidth to be 0.2 pt
+ 
+
+
+land_use_colors = ['darkgreen', 'green', 'orange', 'blue', 'lightseagreen', 'yellow', 'white']
+
+land_use_id = list(land_use.gridcode.unique())
+land_use_id.sort()
+
+for ii, gridcode in enumerate(land_use_id):
+    land_use_feat = ShapelyFeature(land_use.loc[land_use['gridcode'] == gridcode, 'geometry'],
+                                   myCRS,
+                                   edgecolor='k',
+                                   facecolor=land_use_colors[ii],
+                                   linewidth=1)
+
+
 
 
 grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
@@ -181,21 +197,19 @@ print(toplist)
 
 
 ax.add_feature(grid_feat)  # add the collection of features to the map
+ax.add_feature(land_use_feat)  # add the collection of features to the map
 ax.add_feature(trails_feat)  # add the collection of features to the map
 ax.add_feature(intercepted_grids2)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
 
 
 # Create the table
-table_data = [[str(toplist.index[i]), str(toplist.tolist()[i])] for i in range(len(toplist.index))]
-table = ax.table(cellText=table_data, loc='upper left', cellLoc='left', colLabels=['List 1', 'List 2'])
+table_data = [[str(toplist.tolist()[i]) + '%', str(toplist.index[i])] for i in range(len(toplist.tolist()))]
+table = ax.table(cellText=table_data, loc='upper left', cellLoc='left', colLabels=['Occupancy', 'Species'], edges='open')
 table.auto_set_font_size(False)
-table.set_fontsize(10)
-table.scale(0.35, 1.5)  # Adjust the table size if needed
+table.set_fontsize(8)
+table.scale(0.20, 1.5)  # Adjust the table size if needed
 
-cell_props = table.get_celld()
-for (row, col), cell in cell_props.items():
-    cell.set_text_props(multialignment='left', wrap=True)
 
 
 
