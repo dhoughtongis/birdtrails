@@ -23,12 +23,25 @@ import cartopy.crs as ccrs
 import cartopy.io.shapereader as shpreader
 import matplotlib.patches as mpatches
 
+# load trail data first to check user input
+trails = gpd.read_file(os.path.abspath('data/Trails.shp'))
 
 print("\nWelcome to BirdTrials!\n\nThis is a tool that...") 
 print("\nIf you are unsure what trail you are interested in, you can use the TrailFinder or BirdFinder tools included in this package") 
-userselected = input("\nPlease enter a trail name, for example 'Milford Track': ")
-display_stats = input("\nExport a .csv with the bird occupancy data for this trail? (y/n): ")
+while True:
+    # Prompt user for input
+    userselected = input("\nPlease enter a trail name, for example 'Milford Track': ")
 
+    # Check if the entered trail name exists
+    selected_trail = trails[trails['name'] == userselected]
+
+    if not selected_trail.empty:
+        print("")
+        break
+    else:
+        print("The trail does not exist in the geodatabase. Please check for errors and try again.")
+        
+display_stats = input("\nExport a .csv with the bird occupancy data for this trail? (y/n): ")
 
 
 
@@ -73,10 +86,9 @@ ax = plt.axes(projection=ccrs.NearsidePerspective(satellite_height=10000000.0, c
 # load the shapefiles data sets for species, trails and country outline
 outline = gpd.read_file(os.path.abspath('data/NZ_outline.shp'))
 grid = gpd.read_file(os.path.abspath('data/SpeciesData.shp'))
-trails = gpd.read_file(os.path.abspath('data/Trails.shp'))
-
-
 bird_details = pd.read_csv('data/SpeciesAttributes.csv') # Load the CSV file containing the column names mapping
+
+
 # Create a dictionary from the column names mapping DataFrame
 bird_details_dict = dict(zip(bird_details['Code'], bird_details['Common_name']))
 # Rename the columns in birdstats DataFrame using the dictionary
@@ -101,8 +113,7 @@ trails_feat = ShapelyFeature(trails['geometry'],  # first argument is the geomet
  facecolor='none',  # hopefully stops the multi-line being filled in
  linewidth=0.2)  # set the linewidth to be 0.2 pt
 
-# trying to highlight selected track example is milford track
-selected_trail = trails[(trails.name == userselected)]
+
 
 
 selected_feat = ShapelyFeature(selected_trail['geometry'],  # first argument is the geometry
@@ -175,17 +186,16 @@ ax.add_feature(intercepted_grids2)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
 
 
-
-
 # Create the table
-table_data = [toplist]
-table = ax.table(cellText=table_data, loc='upper left', cellLoc='center', colLabels=None)
+table_data = [[str(toplist.index[i]), str(toplist.tolist()[i])] for i in range(len(toplist.index))]
+table = ax.table(cellText=table_data, loc='upper left', cellLoc='left', colLabels=['List 1', 'List 2'])
 table.auto_set_font_size(False)
-table.set_fontsize(12)
-table.scale(1, 1.5)  # Adjust the table size if needed
+table.set_fontsize(10)
+table.scale(0.35, 1.5)  # Adjust the table size if needed
 
-
-
+cell_props = table.get_celld()
+for (row, col), cell in cell_props.items():
+    cell.set_text_props(multialignment='left', wrap=True)
 
 
 
