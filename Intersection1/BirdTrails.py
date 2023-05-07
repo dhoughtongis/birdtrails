@@ -27,6 +27,8 @@ import matplotlib.patches as mpatches
 print("\nWelcome to BirdTrials!\n\nThis is a tool that...") 
 print("\nIf you are unsure what trail you are interested in, you can use the TrailFinder or BirdFinder tools included in this package") 
 userselected = input("\nPlease enter a trail name, for example 'Milford Track': ")
+display_stats = input("\nExport a .csv with the bird occupancy data for this trail? (y/n): ")
+
 
 
 
@@ -72,6 +74,14 @@ ax = plt.axes(projection=ccrs.NearsidePerspective(satellite_height=10000000.0, c
 outline = gpd.read_file(os.path.abspath('data/NZ_outline.shp'))
 grid = gpd.read_file(os.path.abspath('data/SpeciesData.shp'))
 trails = gpd.read_file(os.path.abspath('data/Trails.shp'))
+
+
+bird_details = pd.read_csv('data/SpeciesAttributes.csv') # Load the CSV file containing the column names mapping
+# Create a dictionary from the column names mapping DataFrame
+bird_details_dict = dict(zip(bird_details['Code'], bird_details['Common_name']))
+# Rename the columns in birdstats DataFrame using the dictionary
+grid.rename(columns=bird_details_dict, inplace=True)
+
 
 # NZ outline added using cartopys ShapelyFeature
 outline_feature = ShapelyFeature(outline['geometry'], myCRS, edgecolor='k', facecolor='none')
@@ -144,6 +154,8 @@ print(f'More information: {trails[(trails.name == userselected)].iloc[0, 7]}')
 
 # Bird stats
 
+
+
 birdstats = grid.iloc[intersect_id, 10:73] * 100
 birdstats.loc['Avg'] = birdstats.iloc[:, 1:].mean().round(2)
 
@@ -162,6 +174,21 @@ ax.add_feature(trails_feat)  # add the collection of features to the map
 ax.add_feature(intercepted_grids2)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
 
+
+
+
+# Create the table
+table_data = [toplist]
+table = ax.table(cellText=table_data, loc='upper left', cellLoc='center', colLabels=None)
+table.auto_set_font_size(False)
+table.set_fontsize(12)
+table.scale(1, 1.5)  # Adjust the table size if needed
+
+
+
+
+
+
 # add the title to the map, need to configure to display specifics
 plt.title(f'{userselected} map')
 
@@ -174,31 +201,21 @@ labels = ['Grid square intersects \nwalking track',
 plt.legend([intersect_true, intersect_false], labels,
    loc='lower right', bbox_to_anchor=(1, 0), fancybox=True)
 
-# format a text box for the bird data
-
-
-# format a legend for the grid and tracks using proxy shapes
-intersect_true = mpatches.Rectangle((0, 0), 1, 1, facecolor="k")
-intersect_false = mpatches.Rectangle((0, 0), 1, 1, facecolor="lightgray")
-labels = ['Grid square intersects \nwalking track',
-   'Grid square does not \nintersect walking track']
-plt.legend([intersect_true, intersect_false], labels,
-   loc='lower right', bbox_to_anchor=(1, 0), fancybox=True)
    
 
 myFig ## re-draw the figure
 
 myFig.savefig(f'{userselected} overview.png', bbox_inches='tight', dpi=300)
 
-
 # Confirm map 
 print("\nOverview map saved") 
 print(f'.../{userselected} overview.png') 
 
-display_stats = input("Do you want to display the full bird statistics for this trail? (y/n): ")
 
 if display_stats.lower() == "y":
-    print("\nBird statistics (%)")
-    print(birdstats)
+    birdstats.to_csv(f'{userselected} occupancy data.csv', index=False)
+    print("\nOccupancy data saved")
+    print(f'.../{userselected} occupancy data.csv')
 else:
-    print("Bird statistics not displayed.")
+    print("Occupancy data not exported.")
+    

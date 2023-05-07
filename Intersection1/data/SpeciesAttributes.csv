@@ -8,10 +8,10 @@ cucshi,Shining cuckoo,CUCULIFORMES,CUCULIDAE,Chrysococcyx lucidus lucidus,Non,Fo
 dabchi,New Zealand dabchick,PODICIPEDIFORMES,PODICIPEDIDAE,Poliocephalus rufopectus,Species,Wetland - Freshwater,NI
 dotban,Banded dotterel,CHARADRIIFORMES,CHARADRIIDAE,Charadrius bicinctus bicinctus,Species,Inland Wader tern or gull,Both
 dotnz,New Zealand dotterel,CHARADRIIFORMES,CHARADRIIDAE,Charadrius obscurus aquilonius,Species,Wader tern or gull,Both
-ducblu,Blue duck/whio,ANSERIFORMES,ANATIDAE,Hymenolaimus malacorhynchos,Subfamily,Forest,Both
+ducblu,Blue duck - whio,ANSERIFORMES,ANATIDAE,Hymenolaimus malacorhynchos,Subfamily,Forest,Both
 falcon,New Zealand falcon,FALCONIFORMES,FALCONIDAE,Falco novaeseelandiae,Species,Open,Both
-fantai,New Zealand fantail,PASSERIFORMES,RHIPIDURIDAE,Rhipidura fulginosa placabilis/fulginosa,Species,Forest,Both
-ferbir,Fernbird,PASSERIFORMES,MEGALURIDAE,Bowdleria punctata vealeae/punctata/stewartiana,Species,Wetland - Freshwater,Both
+fantai,New Zealand fantail,PASSERIFORMES,RHIPIDURIDAE,Rhipidura fulginosa placabilis - fulginosa,Species,Forest,Both
+ferbir,Fernbird,PASSERIFORMES,MEGALURIDAE,Bowdleria punctata vealeae - punctata - stewartiana,Species,Wetland - Freshwater,Both
 grecre,Australasian crested grebe,PODICIPEDIFORMES,PODICIPEDIDAE,Podiceps cristatus australis,Non,Wetland - Freshwater,SI
 gulbba,Southern black backed gull,CHARADRIIFORMES,LARIDAE,Larus dominicanus dominicanus,Non,Wader tern or gull,Both
 gulbbi,Black billed gull,CHARADRIIFORMES,LARIDAE,Larus bulleri,Species,Inland Wader tern or gull,Both
@@ -23,18 +23,18 @@ herwhi,White heron,CICONIIFORMES,ARDEIDAE,Ardea modesta,Non,Wetland - Freshwater
 kaka,Kaka,PSITTACIFORMES,PSITTACIDAE,Nestor meridionalis,Family,Forest,Both
 kea,Kea,PSITTACIFORMES,PSITTACIDAE,Nestor notabilis,Family,Forest,SI
 kinfis,New Zealand kingfisher,CORACIIFORMES,ALCEDINIDAE,Halcyon sanctus vagans,Non,Wetland - Freshwater,Both
-kiwbro,Kiwi species,APTERYGIFORMES,APTERYGIDAE,Apteryx mantelli/australis/rowi/haastii/,Order,Forest,Both
+kiwbro,Kiwi species,APTERYGIFORMES,APTERYGIDAE,Apteryx mantelli - australis - rowi - haastii - ,Order,Forest,Both
 kokako,North island kokako,PASSERIFORMES,CALLAEIDAE,Callaeas cinerea wilsoni,Family,Forest,NI
 morpor,Morepork,STRIGIFORMES,STRIGIDAE,Ninox novaeseelandiae novaeseelandiae,Non,Forest,Both
 oyssip,South Island pied oystercatcher,CHARADRIIFORMES,HAEMATOPODIDAE,Haematopus finschi,Species,Inland Wader tern or gull,Both
 oysvar,Variable oystercatcher,CHARADRIIFORMES,HAEMATOPODIDAE,Haematopus unicolor,Species,Wader tern or gull,Both
-parspp,Parakeet (mainland species),PSITTACIFORMES,PSITTACIDAE,Cyanoramphus novaezelandiae/auriceps/malherbi,Species,Forest,Both
-pignz,Kereru/New Zealand pigeon,COLUMBIFORMES,COLUMBIDAE,Hemiphaga novaeseelandiae,Genus,Forest,Both
+parspp,Parakeet (mainland species),PSITTACIFORMES,PSITTACIDAE,Cyanoramphus novaezelandiae - auriceps - malherbi,Species,Forest,Both
+pignz,Kereru - New Zealand pigeon,COLUMBIFORMES,COLUMBIDAE,Hemiphaga novaeseelandiae,Genus,Forest,Both
 pipit,New Zealand pipit,PASSERIFORMES,MOTACILLIDAE,Anthus novaeseelandiae novaeseelandiae,Species,Open,Both
 plospu,Spurwing plover,CHARADRIIFORMES,CHARADRIIDAE,Vanellus miles novaehollandiae,Recent,Open,Both
 pukeko,Pukeko,GRUIFORMES,RALLIDAE,Porphyrio  melanotus melanotus,Non,Wetland - Freshwater,Both
-rifman,Rifleman,PASSERIFORMES,ACANTHISITTIDAE,Acanthisitta chloris chloris/granti,Family,Forest,Both
-robnz,New Zealand robin,PASSERIFORMES,PETROICIDAE,Petroica longipes/australis,Species,Forest,Both
+rifman,Rifleman,PASSERIFORMES,ACANTHISITTIDAE,Acanthisitta chloris chloris - granti,Family,Forest,Both
+robnz,New Zealand robin,PASSERIFORMES,PETROICIDAE,Petroica longipes - australis,Species,Forest,Both
 scanz,New Zealand scaup,ANSERIFORMES,ANATIDAE,Aythya novaeseelandiae,Species,Wetland - Freshwater,Both
 shabl,Black shag,PELECANIFORMES,PHALACROCORACIDAE,Phalacrocorax carbo novaehollandiae,Non,Wetland - Freshwater,Both
 shalbl,Little black shag,PELECANIFORMES,PHALACROCORACIDAE,Phalacrocorax sulcirostris,Non,Wetland - Freshwater,Both
@@ -55,10 +55,10 @@ teagre,Grey teal,ANSERIFORMES,ANATIDAE,Anas gracilis,Recent,Wetland - Freshwater
 terbla,Black-fronted tern,CHARADRIIFORMES,STERNIDAE,Childonias albostriata,Species,Inland Wader tern or gull,Both
 tercas,Caspian tern,CHARADRIIFORMES,STERNIDAE,Hydroprogne caspia,Non,Wader tern or gull,Both
 terwhi,White-fronted tern,CHARADRIIFORMES,STERNIDAE,Sterna striata,Non,Wader tern or gull,Both
-tomtit,New Zealand tomtit,PASSERIFORMES,PETROICIDAE,Petroica macrocephala toitoi/macrocephala,Species,Forest,Both
+tomtit,New Zealand tomtit,PASSERIFORMES,PETROICIDAE,Petroica macrocephala toitoi - macrocephala,Species,Forest,Both
 tui,Tui,PASSERIFORMES,MELIPHAGIDAE,Prosthemadera novaeseelandiae novaeseelandiae,Genus,Forest,Both
 wargre,Grey warbler,PASSERIFORMES,ACANTHIZIDAE,Gerygone igata,Species,Forest,Both
-weka,Weka,GRUIFORMES,RALLIDAE,Gallirallus australis greyi/australis/scotti/hectori,Species,Forest,Both
+weka,Weka,GRUIFORMES,RALLIDAE,Gallirallus australis greyi - australis - scotti - hectori,Species,Forest,Both
 whihea,Whitehead,PASSERIFORMES,PACHYCEPHALIDAE,Mohoua albicilla,Family,Forest,NI
 wreroc,Rock wren,PASSERIFORMES,ACANTHISITTIDAE,Xenicus gilviventris,Family,Open,SI
 wrybil,Wrybill,CHARADRIIFORMES,CHARADRIIDAE,Anarhynchus frontalis,Genus,Inland Wader tern or gull,Both
