@@ -207,6 +207,8 @@ table.scale(0.20, 1.5)  # Adjust the table size if needed
 # add the title to the map, need to configure to display specifics
 plt.title(f'{userselected} bird occupancy')
 
+# add the scale bar to the axis
+scale_bar(ax)
 
 # format a legend for the grid and tracks using proxy shapes
 intersect_true = mpatches.Rectangle((0, 0), 1, 1, facecolor="k")
