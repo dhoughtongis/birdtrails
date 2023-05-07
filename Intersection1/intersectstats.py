@@ -85,8 +85,11 @@ ax = plt.axes(projection=ccrs.NearsidePerspective(satellite_height=10000000.0, c
 
 # load the shapefiles data sets for species, trails and country outline
 outline = gpd.read_file(os.path.abspath('data/NZ_outline.shp'))
+lakes = gpd.read_file(os.path.abspath('data/Lakes.shp'))
+rivers = gpd.read_file(os.path.abspath('data/Rivers.shp'))
+
+
 grid = gpd.read_file(os.path.abspath('data/SpeciesData.shp'))
-land_use = gpd.read_file(os.path.abspath('data/lu/LandUse.shp'))
 bird_details = pd.read_csv('data/SpeciesAttributes.csv') # species attributes for table linking
 
 
@@ -97,9 +100,13 @@ grid.rename(columns=bird_details_dict, inplace=True)
 
 
 # NZ outline added using cartopys ShapelyFeature
-outline_feature = ShapelyFeature(outline['geometry'], myCRS, edgecolor='k', facecolor='none')
+outline_feature = ShapelyFeature(outline['geometry'], myCRS, edgecolor='k', linewidth=0.3, facecolor='lightgreen')
+lakes_feature = ShapelyFeature(lakes['geometry'], myCRS, edgecolor='paleturquoise', linewidth=0, facecolor='paleturquoise')
+rivers_feature = ShapelyFeature(rivers['geometry'], myCRS, edgecolor='paleturquoise', linewidth=0.3, facecolor='none')
 xmin, ymin, xmax, ymax = outline.total_bounds
 ax.add_feature(outline_feature) # add the features we've created to the map.
+ax.add_feature(lakes_feature)
+ax.add_feature(rivers_feature)
 
 # using the boundary of the shapefile features, zoom the map to our area of interest
 ax.set_extent([xmin-5000, xmax+5000, ymin-5000, ymax+5000], crs=myCRS) # because total_bounds 
@@ -124,27 +131,12 @@ selected_feat = ShapelyFeature(selected_trail['geometry'],  # first argument is 
  
 
 
-land_use_colors = ['darkgreen', 'green', 'orange', 'blue', 'lightseagreen', 'yellow', 'white']
-
-land_use_id = list(land_use.gridcode.unique())
-land_use_id.sort()
-
-for ii, gridcode in enumerate(land_use_id):
-    land_use_feat = ShapelyFeature(land_use.loc[land_use['gridcode'] == gridcode, 'geometry'],
-                                   myCRS,
-                                   edgecolor='k',
-                                   facecolor=land_use_colors[ii],
-                                   linewidth=1)
-
-
-
-
 grid_feat = ShapelyFeature(grid['geometry'],  # first argument is the geometry
  myCRS,  # second argument is the CRS
  facecolor='none',  # sets the face color to coral, hopefully
  linewidth=0.2,  # set the outline width to be 1 pt
  alpha=0.75, # set the alpha (transparency) to be 0.25 (out of 1)
- edgecolor='lightgray')
+ edgecolor='gray')
 
 # Find the intersection between the line and the polygon, save boolean of data as txt doc.
 intersection = grid.intersects(selected_trail.unary_union)
@@ -158,7 +150,7 @@ print(intersect_id)
 # create feature to highlight grids intercepted by track
 intercepted_grids = grid[grid.index.isin(intersect_id)]
 
-intercepted_grids2 = ShapelyFeature(intercepted_grids['geometry'],  # first argument is the geometry
+intercepted_grids_geometry = ShapelyFeature(intercepted_grids['geometry'],  # first argument is the geometry
  myCRS,  # second argument is the CRS
  edgecolor='k',  # set the edgecolor to be royalblue
  facecolor='none',  # hopefully stops the multi-line being filled in
@@ -188,18 +180,17 @@ birdstats.loc['Avg'] = birdstats.iloc[:, 1:].mean().round(2)
 
 
 
-print("\nHighest bird presence along trail (%)----------------------") 
+
 sorted_birdstats = birdstats.sort_values(by='Avg', axis=1, ascending=False)
 toplist = sorted_birdstats.loc['Avg'].head(15)
-print(toplist)
-
+# print("\nHighest bird presence along trail (%)----------------------") 
+# print(toplist)
 
 
 
 ax.add_feature(grid_feat)  # add the collection of features to the map
-ax.add_feature(land_use_feat)  # add the collection of features to the map
 ax.add_feature(trails_feat)  # add the collection of features to the map
-ax.add_feature(intercepted_grids2)  # add the collection of features to the map
+ax.add_feature(intercepted_grids_geometry)  # add the collection of features to the map
 ax.add_feature(selected_feat)  # add the collection of features to the map
 
 
@@ -214,12 +205,12 @@ table.scale(0.20, 1.5)  # Adjust the table size if needed
 
 
 # add the title to the map, need to configure to display specifics
-plt.title(f'{userselected} map')
+plt.title(f'{userselected} bird occupancy')
 
 
 # format a legend for the grid and tracks using proxy shapes
 intersect_true = mpatches.Rectangle((0, 0), 1, 1, facecolor="k")
-intersect_false = mpatches.Rectangle((0, 0), 1, 1, facecolor="lightgray")
+intersect_false = mpatches.Rectangle((0, 0), 1, 1, facecolor="gray")
 labels = ['Grid square intersects \nwalking track',
    'Grid square does not \nintersect walking track']
 plt.legend([intersect_true, intersect_false], labels,
@@ -241,5 +232,5 @@ if display_stats.lower() == "y":
     print("\nOccupancy data saved")
     print(f'.../{userselected} occupancy data.csv')
 else:
-    print("Occupancy data not exported.")
+    print("\nOccupancy data not requested.")
     
