@@ -113,17 +113,6 @@ intercepted_grids2 = ShapelyFeature(intercepted_grids['geometry'],  # first argu
  facecolor='none',  # hopefully stops the multi-line being filled in
  linewidth=0.5)  # set the linewidth to be 0.2 pt
 
-
-ax.add_feature(grid_feat)  # add the collection of features to the map
-ax.add_feature(trails_feat)  # add the collection of features to the map
-ax.add_feature(intercepted_grids2)  # add the collection of features to the map
-ax.add_feature(selected_feat)  # add the collection of features to the map
-
-ax2 = inset_axes(ax, width="40%", height="40%", loc="upper right", 
-                   axes_class=cartopy.mpl.geoaxes.GeoAxes, 
-                   axes_kwargs=dict(map_projection=cartopy.crs.PlateCarree()))
-ax2.add_feature(cartopy.feature.COASTLINE)
-
 # add the title to the map, need to configure to display specifics
 plt.title(f'{userselected} map')
 
@@ -138,7 +127,18 @@ labels = ['Grid square intersects \nwalking track',
 plt.legend([intersect_true, intersect_false], labels,
    loc='lower right', bbox_to_anchor=(1, 0), fancybox=True)
 
+ax.add_feature(grid_feat)  # add the collection of features to the map
+ax.add_feature(trails_feat)  # add the collection of features to the map
+ax.add_feature(intercepted_grids2)  # add the collection of features to the map
+ax.add_feature(selected_feat)  # add the collection of features to the map
 
+ax2 = inset_axes(ax, width="40%", height="40%", loc="upper left", 
+                   axes_class=cartopy.mpl.geoaxes.GeoAxes, 
+                   axes_kwargs=dict(map_projection=cartopy.crs.PlateCarree()))
+ax2.set_extent([min(x[0] for x in selected_feat), max(x[0] for x in selected_feat), min(x[1] for x in selected_feat), max(x[1] for x in selected_feat)], crs=ccrs.PlateCarree())
+ax2.add_patch(plt.Polygon(selected_feat, transform=ccrs.PlateCarree(), facecolor='none', edgecolor='k'))
+ax2.add_feature(intercepted_grids2)  # add the collection of features to the map
+ax2.add_feature(selected_feat)  # add the collection of features to the map
 
 myFig ## re-draw the figure
 

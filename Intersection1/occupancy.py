@@ -9,21 +9,10 @@ import matplotlib.lines as mlines
 
 
 grid = gpd.read_file('data/SpeciesData.shp')
-trails = gpd.read_file('data/Trails.shp')
+selectedgrid = grid[['geometry', 'kea']]
 
-
-
-m = grid.explore('kea', cmap='Oranges')
-
-
-trails_df = gpd.GeoDataFrame(geometry=gpd)
-
-trails.head() # show the new geodataframe
-
-
-folium.LayerControl().add_to(m)
+m = selectedgrid.explore('kea', cmap='Oranges')
 
 m # show the map
 
-m.save('Species_map.html')
-
+m.save('Kea_map.html')

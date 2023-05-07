@@ -1,3 +1,12 @@
+import os
+import pandas as pd
+import geopandas as gpd
+import cartopy
+import matplotlib.pyplot as plt
+from cartopy.feature import ShapelyFeature
+import cartopy.crs as ccrs
+import cartopy.io.shapereader as shpreader
+import matplotlib.patches as mpatches
 
 
 """A one-line summary of the module or program, terminated by a period.
@@ -13,20 +22,7 @@ Typical usage example:
   bar = foo.FunctionBar()
 """
 
-import os
-import pandas as pd
-import geopandas as gpd
-import cartopy
-import matplotlib.pyplot as plt
-from cartopy.feature import ShapelyFeature
-import cartopy.crs as ccrs
-import cartopy.io.shapereader as shpreader
-import matplotlib.patches as mpatches
-
-
-print("\nWelcome to BirdTrials!\n\nThis is a tool that...") 
-print("\nIf you are unsure what trail you are interested in, you can use the TrailFinder or BirdFinder tools included in this package") 
-userselected = input("\nPlease enter a trail name, for example 'Milford Track': ")
+birdid = 'Avalanche Peak Route'
 
 
 
@@ -91,8 +87,8 @@ trails_feat = ShapelyFeature(trails['geometry'],  # first argument is the geomet
  facecolor='none',  # hopefully stops the multi-line being filled in
  linewidth=0.2)  # set the linewidth to be 0.2 pt
 
-# trying to highlight selected track example is milford track
-selected_trail = trails[(trails.name == userselected)]
+# find selected bird values 
+selected_trail = trails[(trails.'birdid' == birdid)]
 
 
 selected_feat = ShapelyFeature(selected_trail['geometry'],  # first argument is the geometry
@@ -147,7 +143,8 @@ print(f'More information: {trails[(trails.name == userselected)].iloc[0, 7]}')
 birdstats = grid.iloc[intersect_id, 10:73] * 100
 birdstats.loc['Avg'] = birdstats.iloc[:, 1:].mean().round(2)
 
-
+# print("\nBird statistics (%)") 
+# print(birdstats) 
 
 print("\nHighest bird presence along trail (%)----------------------") 
 sorted_birdstats = birdstats.sort_values(by='Avg', axis=1, ascending=False)
@@ -194,11 +191,3 @@ myFig.savefig(f'{userselected} overview.png', bbox_inches='tight', dpi=300)
 # Confirm map 
 print("\nOverview map saved") 
 print(f'.../{userselected} overview.png') 
-
-display_stats = input("Do you want to display the full bird statistics for this trail? (y/n): ")
-
-if display_stats.lower() == "y":
-    print("\nBird statistics (%)")
-    print(birdstats)
-else:
-    print("Bird statistics not displayed.")
