@@ -162,13 +162,14 @@ grid_high_values = grid_stats.head(100)
 # print(grid_high_values) # troubleshooting
 
 # identify and print the grid attributes that intersect line.
-grid_hv_id = grid_high_values.iloc[:, 1].copy()
-grid_hv_id.drop('Top', axis=1, inplace=True)
-print(grid_hv_id)
-grid_hv_geo = grid[grid.index.isin(grid_hv_id)]
+grid_hv_id = grid_high_values.iloc[:, 0:0].copy() # this isn't forming a dataframe
+grid_hv_df = pd.DataFrame(grid_hv_id, columns=['Grid']) # hopefully this fixes it
+grid_hv_df['New'] = grid_hv_df.index # makes another column called New with the same values in.
+# print(grid_hv_df[:, 2])
+grid_hv_geo = grid[grid.index.isin(grid_hv_df.index)]
 
 # Find the intersection between the line and the polygon, save boolean of data as txt doc.
-intersection = trails.intersects(grid_hv_geo.unary_union)
+intersection = grid_hv_geo['geometry'].intersects(trails.unary_union)
 # print(intersection,  file=open('log.txt', 'w')) # create a .txt file containing the full boolean list for troubleshooting
 
 # identify and print the grid attributes that intersect line.
