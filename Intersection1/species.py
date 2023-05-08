@@ -152,82 +152,81 @@ grid.plot(column=userselected,
 
 # select the index and relevant bird column
 species_column = grid.columns.get_loc(userselected) # get a numerical value for the bird column
-species_values = grid.iloc[:, [species_column]]
-species_gdf = species_values.rename(columns={f'{userselected}': 'Top'})
-# print(species_gdf) # troubleshooting
 
-# create a list of the 100 grids with the highest occupancy data for selected bird
-grid_stats = species_gdf.sort_values(by='Top', axis=0, ascending=False)
-grid_high_values = grid_stats.head(100) 
-# print(grid_high_values) # troubleshooting
-
-# identify and print the grid attributes that intersect line.
-grid_hv_id = grid_high_values.iloc[:, 0:0].copy() # this isn't forming a dataframe
-grid_hv_df = pd.DataFrame(grid_hv_id, columns=['Grid']) # hopefully this fixes it
-grid_hv_df['New'] = grid_hv_df.index # makes another column called New with the same values in.
-# print(grid_hv_df[:, 2])
-grid_hv_geo = grid[grid.index.isin(grid_hv_df.index)]
-
-
-
-
-# Initialize a variable to track if intersection is found
-intersection_found = False
-
-
-
-
-# Iterate over each trail
-for geometry in trails:
-    # Check if the trail intersects the polygon
-    if trails.intersects(grid_hv_geo.unary_union).any():
-        print(f"Intersection found for trail: {value}")  # Display the trail information
-        intersection = True
-        intersection_found = True
-        break  # Stop the loop after finding the intersection
-
-# Continue with the rest of your code after the loop
-if intersection_found:
-    print(f'Arghh')
-else:
-    print(f'Arghh')
+# make a copy of the grid gdf and sort it by the highest value of occupancy for selected bird
+grid_sort = grid.iloc[:,:].copy()
+grid_sorted = grid_sort.sort_values(by=f'{userselected}', axis=0, ascending=False)
 
 
 
 
 
+
+# a loop that will run down the sorted grid data, from highest species occupancy until a intersect returns a True with a trail
+
+found_intersection = False
+iteration = 1
+
+while not found_intersection:
+    grid_hv_id = grid_sorted.iloc[iteration, :].copy() 
+    
+    intersection = trails['geometry'].intersects(grid_hv_id['geometry'])
+    
+    if any(intersection):
+        found_intersection = True
+    else:
+        print(f'No trails found in grid {iteration}')
+        iteration += 1 
 
 
 # identify and print the grid attributes that intersect line.
-# print('Intersected trails:')
-# print(intersection)
+print('Intersected trail IDs:')
+intersect_id = [i for i, val in enumerate(intersection) if val]
+print(intersect_id)
 
-# limit results to 5 trails
-
-# selected_trails_list = grid.iloc[top_10_trails, 2]
 
 # create feature to highlight grids intercepted by track
-# intercepted_grids = grid[grid.index.isin(grid_high_values)]
+intercepted_trails = trails[trails.index.isin(intersect_id)]
 
-# intercepted_grids_geometry = ShapelyFeature(intercepted_grids['geometry'],  # first argument is the geometry
-#  myCRS,  # second argument is the CRS
-#  edgecolor='k',  # set the edgecolor to be royalblue
-#  facecolor='none',  # hopefully stops the multi-line being filled in
-#  linewidth=0.5)  # set the linewidth to be 0.2 pt
-
+intercepted_trails_geometry = ShapelyFeature(intercepted_trails['geometry'],  # first argument is the geometry
+ myCRS,  # second argument is the CRS
+ edgecolor='red',  # set the edgecolor to be royalblue
+ facecolor='none',  # hopefully stops the multi-line being filled in
+ linewidth=1.5)  # set the linewidth to be 0.2 pt
 
 
 
 ax.add_feature(grid_feat)  # add the collection of features to the map
-
-
+ax.add_feature(intercepted_trails_geometry)
 
 
 # Rename the columns in birdstats gdf using the dictionary
 grid.rename(columns=bird_details_dict, inplace=True)
-
 us_bird = bird_details_dict[userselected]
 
+
+
+print("\nTrail details----------------------") 
+print(f'Name: {userselected}') 
+print(f'Description: {trails[(trails.name == userselected)].iloc[0, 2]}')
+print(f'Difficulty: {trails[(trails.name == userselected)].iloc[0, 3]}')
+print(f'Time: {trails[(trails.name == userselected)].iloc[0, 4]}')
+print(f'Length: {traildistance.round(2)} km')
+print(f'More information: {trails[(trails.name == userselected)].iloc[0, 7]}')
+
+
+
+# Trail data
+toplist = intercepted_trails.head(5) # Limit to 5 trails
+# print("\nTrail information") 
+# print(toplist)
+
+# Create the table
+table_data = [[str(toplist.tolist()[i]) + '%', str(toplist.index[i])] for i in range(len(toplist.tolist()))]
+table = ax.table(cellText=table_data, loc='upper left', cellLoc='left', colLabels=['Occupancy', 'Species'], edges='open')
+table.auto_set_font_size(False)
+table.set_fontsize(8)
+table.scale(0.20, 1.5)  # Adjust the table size if needed
 
 # add the title to the map, need to configure to display specifics
 plt.title(f'{us_bird} bird occupancy')
