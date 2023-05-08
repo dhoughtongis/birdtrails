@@ -162,9 +162,8 @@ grid_high_values = grid_stats.head(100)
 # print(grid_high_values) # troubleshooting
 
 # identify and print the grid attributes that intersect line.
-grid_hv_id = grid_high_values.iloc[:, 1].copy()
-grid_hv_id.drop('Top', axis=1, inplace=True)
-print(grid_hv_id)
+grid_hv_id = [i for i, val in enumerate(grid_high_values.iloc[:, 0]) if val]
+# print(grid_hv_id)
 grid_hv_geo = grid[grid.index.isin(grid_hv_id)]
 
 # Find the intersection between the line and the polygon, save boolean of data as txt doc.
@@ -173,14 +172,16 @@ intersection = trails.intersects(grid_hv_geo.unary_union)
 
 # identify and print the grid attributes that intersect line.
 print('Intersected trails:')
-print(intersection)
+intersect_id = [i for i, val in enumerate(intersection) if val]
+print(intersect_id)
 
 # limit results to 5 trails
+top_10_trails = intersect_id.head(5) 
 
-# selected_trails_list = grid.iloc[top_10_trails, 2]
+selected_trails_list = grid.iloc[top_10_trails, 2]
 
 # create feature to highlight grids intercepted by track
-# intercepted_grids = grid[grid.index.isin(grid_high_values)]
+intercepted_grids = grid[grid.index.isin(grid_high_values)]
 
 # intercepted_grids_geometry = ShapelyFeature(intercepted_grids['geometry'],  # first argument is the geometry
 #  myCRS,  # second argument is the CRS
