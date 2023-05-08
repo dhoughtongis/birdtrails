@@ -168,13 +168,39 @@ grid_hv_df['New'] = grid_hv_df.index # makes another column called New with the 
 # print(grid_hv_df[:, 2])
 grid_hv_geo = grid[grid.index.isin(grid_hv_df.index)]
 
-# Find the intersection between the line and the polygon, save boolean of data as txt doc.
-intersection = grid_hv_geo['geometry'].intersects(trails.unary_union)
-# print(intersection,  file=open('log.txt', 'w')) # create a .txt file containing the full boolean list for troubleshooting
+
+
+
+# Initialize a variable to track if intersection is found
+intersection_found = False
+
+
+
+
+# Iterate over each trail
+for geometry in trails:
+    # Check if the trail intersects the polygon
+    if trails.intersects(grid_hv_geo.unary_union).any():
+        print(f"Intersection found for trail: {value}")  # Display the trail information
+        intersection = True
+        intersection_found = True
+        break  # Stop the loop after finding the intersection
+
+# Continue with the rest of your code after the loop
+if intersection_found:
+    print(f'Arghh')
+else:
+    print(f'Arghh')
+
+
+
+
+
+
 
 # identify and print the grid attributes that intersect line.
-print('Intersected trails:')
-print(intersection)
+# print('Intersected trails:')
+# print(intersection)
 
 # limit results to 5 trails
 
