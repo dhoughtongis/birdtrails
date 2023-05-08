@@ -206,27 +206,26 @@ us_bird = bird_details_dict[userselected]
 
 
 
-print("\nTrail details----------------------") 
-print(f'Name: {userselected}') 
-print(f'Description: {trails[(trails.name == userselected)].iloc[0, 2]}')
-print(f'Difficulty: {trails[(trails.name == userselected)].iloc[0, 3]}')
-print(f'Time: {trails[(trails.name == userselected)].iloc[0, 4]}')
-print(f'Length: {traildistance.round(2)} km')
-print(f'More information: {trails[(trails.name == userselected)].iloc[0, 7]}')
 
 
 
 # Trail data
-toplist = intercepted_trails.head(5) # Limit to 5 trails
-# print("\nTrail information") 
-# print(toplist)
+toplist = intercepted_trails.iloc[:,[1,9]].head(5) # Limit to 5 trails
+toplist['SHAPE_Leng'] = toplist['SHAPE_Leng'] / 1000 # convert trail length in this list from m to km
+toplist['SHAPE_Leng'] = toplist['SHAPE_Leng'].round(1) # round to 1 decimal point
+# print(toplist) # troubleshoot if needed
+
+
 
 # Create the table
-table_data = [[str(toplist.tolist()[i]) + '%', str(toplist.index[i])] for i in range(len(toplist.tolist()))]
-table = ax.table(cellText=table_data, loc='upper left', cellLoc='left', colLabels=['Occupancy', 'Species'], edges='open')
+table_data = [[str(toplist['SHAPE_Leng'].iloc[i]) + 'km', str(toplist['name'].iloc[i])] for i in range(len(toplist))]
+table = ax.table(cellText=table_data, loc='upper left', cellLoc='left', colLabels=['Length', 'Walk'], edges='open')
 table.auto_set_font_size(False)
 table.set_fontsize(8)
 table.scale(0.20, 1.5)  # Adjust the table size if needed
+
+
+
 
 # add the title to the map, need to configure to display specifics
 plt.title(f'{us_bird} bird occupancy')
@@ -234,6 +233,8 @@ plt.title(f'{us_bird} bird occupancy')
 # add the scale bar to the axis
 scale_bar(ax)
 # ax.add_feature(grid) # add the features we've created to the map.
+
+
 
 
 
