@@ -163,25 +163,44 @@ grid_sorted = grid_sort.sort_values(by=f'{userselected}', axis=0, ascending=Fals
 
 
 # a loop that will run down the sorted grid data, from highest species occupancy until a intersect returns a True with a trail
-
+ 
 found_intersection = False
 iteration = 1
+intersection_list = []
 
 while not found_intersection:
     grid_hv_id = grid_sorted.iloc[iteration, :].copy() 
     
     intersection = trails['geometry'].intersects(grid_hv_id['geometry'])
+    i_id = [i for i, val in enumerate(intersection) if val]
+    intersection_list.append(i_id)
     
     if any(intersection):
-        found_intersection = True
+        print(f'Trail in grid {iteration}: yes')
+        # found_intersection = True # activating this will stop the loop at the first intersection found
+        iteration += 1
     else:
-        print(f'No trails found in grid {iteration}')
-        iteration += 1 
+        print(f'Trail in grid {iteration}: no')
+        iteration += 1
+        
+    if iteration == 50:
+        break
 
 
 # identify and print the grid attributes that intersect line.
-print('Intersected trail IDs:')
-intersect_id = [i for i, val in enumerate(intersection) if val]
+# print(intersection_list)
+
+# clean up the compiled intersection list (i_id), by removing groupings and second occurences of numbers.
+intersect_id = []
+seen_values = set()
+
+for sublist in intersection_list:
+    for value in sublist:
+        if value not in seen_values:
+            intersect_id.append(value)
+            seen_values.add(value)
+
+print('\nIdentified tracks in order of presence in higher bird occupany area')
 print(intersect_id)
 
 
@@ -210,7 +229,7 @@ us_bird = bird_details_dict[userselected]
 
 
 # Trail data
-toplist = intercepted_trails.iloc[:,[1,9]].head(5) # Limit to 5 trails
+toplist = intercepted_trails.iloc[:,[1,9]].head(15) # Limit to 15 trails
 toplist['SHAPE_Leng'] = toplist['SHAPE_Leng'] / 1000 # convert trail length in this list from m to km
 toplist['SHAPE_Leng'] = toplist['SHAPE_Leng'].round(1) # round to 1 decimal point
 # print(toplist) # troubleshoot if needed
