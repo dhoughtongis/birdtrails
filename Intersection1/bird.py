@@ -162,7 +162,7 @@ grid_sorted = grid_sort.sort_values(by=f'{userselected}', axis=0, ascending=Fals
 
 
 
-# a loop that will run down the sorted grid data, from highest species occupancy until a intersect returns a True with a trail
+# a loop that will run down the sorted grid data, from highest species occupancy until a stopping at the 50th intersection
  
 found_intersection = False
 iteration = 1
@@ -183,7 +183,7 @@ while not found_intersection:
         print(f'Trail in grid {iteration}: no')
         iteration += 1
         
-    if iteration == 50:
+    if iteration == 50: # activating this will stop the loop at iteration/grid
         break
 
 
@@ -200,18 +200,37 @@ for sublist in intersection_list:
             intersect_id.append(value)
             seen_values.add(value)
 
-print('\nIdentified tracks in order of presence in higher bird occupany area')
+print('\nIdentified track IDs in order of presence in higher bird occupany area')
 print(intersect_id)
+intersect_id_trimmed = intersect_id[:15]
+print(intersect_id_trimmed)
+
+# create feature to highlight grids intercepted by track, limited to top 15
+intercepted_trails = trails[trails.index.isin(intersect_id_trimmed)]
+# print(intercepted_trails) # troubleshooting
 
 
-# create feature to highlight grids intercepted by track
-intercepted_trails = trails[trails.index.isin(intersect_id)]
+# Trying to get individual colours for each line.
+# Remains on to do list!
 
+# trail_id = list(intercepted_trails.geometry.unique())
+# range of 15 colours compatable with the grid's colormap to identify each trail
+# trailcolors = ['Red', 'Crimson', 'Maroon', 'Tomato', 'Coral', 'Gold', 'Yellow', 'LemonChiffon', 'LimeGreen', 'Green', 'OliveDrab', 'Chartreuse', 'MediumSeaGreen', 'ForestGreen', 'DarkGreen']
+
+# for ii, geometry in enumerate(trail_id):
+#   intercepted_trails_geometry = ShapelyFeature(intercepted_trails['geometry'],  # first argument is the geometry
+#    myCRS,  # second argument is the CRS
+#    edgecolor=trailcolors[ii],  # set the edgecolor to be royalblue
+#    facecolor='none',  # hopefully stops the multi-line being filled in
+#    linewidth=1.5)  # set the linewidth to be 0.2 pt
+
+
+# geometry for lines of trails identified, with single color.
 intercepted_trails_geometry = ShapelyFeature(intercepted_trails['geometry'],  # first argument is the geometry
- myCRS,  # second argument is the CRS
- edgecolor='red',  # set the edgecolor to be royalblue
- facecolor='none',  # hopefully stops the multi-line being filled in
- linewidth=1.5)  # set the linewidth to be 0.2 pt
+  myCRS,  # second argument is the CRS
+  edgecolor='red',  # set the edgecolor to be royalblue
+  facecolor='none',  # hopefully stops the multi-line being filled in
+  linewidth=1.5)  # set the linewidth to be 0.2 pt
 
 
 
