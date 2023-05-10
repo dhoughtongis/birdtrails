@@ -1,3 +1,5 @@
-BirdTrails
+# Welcome to BirdTrails
+## EGM722
+### David Houghton      B00910706
 
-A work in progress
+Just starting the README
