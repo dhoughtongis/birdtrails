@@ -215,26 +215,14 @@ intersected_trails = trails[trails.index.isin(intersect_id_trimmed)]
 
 
 # Trying to get individual colours for each line.
-# Remains on to do list!
-
-# trail_id = list(intersected_trails.geometry.unique())
 # range of 15 colours compatable with the grid's colormap to identify each trail
-# trailcolors = ['Red', 'Crimson', 'Maroon', 'Tomato', 'Coral', 'Gold', 'Yellow', 'LemonChiffon', 'LimeGreen', 'Green', 'OliveDrab', 'Chartreuse', 'MediumSeaGreen', 'ForestGreen', 'DarkGreen']
+trailcolours = ['Red', 'Crimson', 'Maroon', 'Tomato', 'Coral', 'Gold', 'Yellow', 'LemonChiffon', 'LimeGreen', 'Green', 'OliveDrab', 'Chartreuse', 'MediumSeaGreen', 'ForestGreen', 'DarkGreen']
 
-# for ii, geometry in enumerate(trail_id):
-#   intersected_trails_geometry = ShapelyFeature(intersected_trails['geometry'],  # first argument is the geometry
-#    myCRS,  # second argument is the CRS
-#    edgecolor=trailcolors[ii],  # set the edgecolor to be royalblue
-#    facecolor='none',  # hopefully stops the multi-line being filled in
-#    linewidth=1.5)  # set the linewidth to be 0.2 pt
-
-
-# geometry for lines of trails identified, with single color.
 intersected_trails_geometry = ShapelyFeature(intersected_trails['geometry'],  # first argument is the geometry
   myCRS,  # second argument is the CRS
-  edgecolor='red',  # set the edgecolor
+  edgecolor=trailcolours,  # set the edgecolor to be defined
   facecolor='none',  # hopefully stops the multi-line being filled in
-  linewidth=1.5)  # set the linewidth
+  linewidth=1.5)  # set the linewidth to be 0.2 pt
 
 
 # add the species specific chloropleth grid and intersected trails to map
@@ -248,18 +236,39 @@ us_bird = bird_details_dict[userselected]
 
 
 # Trail data
-toplist = intersected_trails.iloc[:,[1,9]].head(15) # Limit to 15 trails
+toplist = intersected_trails.iloc[:,:].head(15) # Limit to 15 trails
 toplist['SHAPE_Leng'] = toplist['SHAPE_Leng'] / 1000 # convert trail length in this list from m to km
 toplist['SHAPE_Leng'] = toplist['SHAPE_Leng'].round(1) # round to 1 decimal point
 # print(toplist) # troubleshoot if needed
 
 
-# Create the table
+# Create the table. colour text in the table, same order as the trail geometry coloured + back for firsdt row (title)
 table_data = [[str(toplist['SHAPE_Leng'].iloc[i]) + 'km', str(toplist['name'].iloc[i])] for i in range(len(toplist))]
-table = ax.table(cellText=table_data, loc='upper left', cellLoc='left', colLabels=['Length', 'Trail name'], edges='open')
+table = ax.table(cellText=table_data, 
+                 loc='upper left', 
+                 cellColours=[['Red', 'White'],
+                              ['Crimson', 'White'],
+                              ['Maroon', 'White'],
+                              ['Tomato', 'White'],
+                              ['Coral', 'White'],
+                              ['Gold', 'White'],
+                              ['Yellow', 'White'],
+                              ['LemonChiffon', 'White'],
+                              ['LimeGreen', 'White'],
+                              ['Green', 'White'],
+                              ['OliveDrab', 'White'],
+                              ['Chartreuse', 'White'],
+                              ['MediumSeaGreen', 'White'],
+                              ['ForestGreen', 'White'],
+                              ['DarkGreen', 'White']],
+                 cellLoc='left', 
+                 colLabels=['Length', 'Trail name'])
 table.auto_set_font_size(False)
 table.set_fontsize(7) # smaller font, as trail names can be quite long
-table.scale(0.20, 1.5)  # Adjust the table size if needed
+table.scale(0.15, 1.55)  # Adjust the table size if needed
+for key, cell in table.get_celld().items():
+    cell.set_linewidth(0)
+
 
 
 # add the title to the map, need to configure to display specifics
@@ -274,6 +283,16 @@ myFig ## re-draw the figure
 
 
 myFig.savefig(f'user/{us_bird} species map.png', bbox_inches='tight', dpi=300)
+
+
+# print track detail list, with websites and improved spacing
+print(f'\nTracks with highest {us_bird} occupancy/presence (highest first)') 
+for index, row in toplist.iterrows():
+    list_name = row['name']
+    list_web = row['walkingAnd']
+    list_distance = row['SHAPE_Leng']
+    list_completion = row['completion']
+    print(f"\nName:       {list_name}\nDistance:   {list_distance} km\nCompletion: {list_completion}\nWebsite:    {list_web}")
 
 
 # Confirm map export to user, with location
