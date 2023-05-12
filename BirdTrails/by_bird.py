@@ -210,7 +210,8 @@ print(intersect_id_trimmed)
 
 
 # create feature to highlight grids intersected by track, limited to top 15
-intersected_trails = trails[trails.index.isin(intersect_id_trimmed)]
+unsorted_intersect = trails[trails.index.isin(intersect_id_trimmed)]
+intersected_trails = unsorted_intersect.sort_values(by='name', axis=0, ascending=True)
 # print(intersected_trails) # troubleshooting
 
 
@@ -222,8 +223,7 @@ intersected_trails_geometry = ShapelyFeature(intersected_trails['geometry'],  # 
   myCRS,  # second argument is the CRS
   edgecolor=trailcolours,  # set the edgecolor to be defined
   facecolor='none',  # hopefully stops the multi-line being filled in
-  linewidth=1.5)  # set the linewidth to be 0.2 pt
-
+  linewidth=1.5)  # set the linewidth
 
 # add the species specific chloropleth grid and intersected trails to map
 ax.add_feature(grid_feat)  
@@ -286,7 +286,7 @@ myFig.savefig(f'user/{us_bird} species map.png', bbox_inches='tight', dpi=300)
 
 
 # print track detail list, with websites and improved spacing
-print(f'\nTracks with highest {us_bird} occupancy/presence (highest first)') 
+print(f'\nTracks with highest {us_bird} occupancy/presence') 
 for index, row in toplist.iterrows():
     list_name = row['name']
     list_web = row['walkingAnd']
