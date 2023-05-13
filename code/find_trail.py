@@ -1,7 +1,7 @@
 """BirdTrails/find_trail.py generates a Folium map showing NZ trails.
 
-This script uses Folium and Geopandas to load a data set of Department 
-of Conservation trails in New Zealand and display them on an interactive 
+This script uses Folium and Geopandas to load a data set of Department
+of Conservation trails in New Zealand and display them on an interactive
 HTML map. This will allow users to browse trails that can then be analysed
 using by_bird.py
 
@@ -26,7 +26,9 @@ data_geojson = folium.GeoJson(data[data.geometry.length > 0.001],
    'weight': 3,
    'color': 'red'
   },
-  tooltip=folium.GeoJsonTooltip(sticky=False,fields=['name', 'difficulty', 'completion', 'length'], labels=True, aliases=['Trail name', 'Difficulty', 'Completion time', 'Trail length']))
+  tooltip=folium.GeoJsonTooltip(sticky=False,
+                                fields=['name', 'difficulty', 'completion', 'length'],
+                                labels=True, aliases=['Trail name', 'Difficulty', 'Completion time', 'Trail length']))
 # adds a tooltip function to the map, showing trail info on mouseover. Uses 'alias' parameter to tidy the labels on the tooltip
 # from here https://python-visualization.github.io/folium/modules.html#folium.features.GeoJsonTooltip
 

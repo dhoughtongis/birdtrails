@@ -223,7 +223,7 @@ intersected_trails_geometry = ShapelyFeature(intersected_trails['geometry'],  # 
   myCRS,  # second argument is the CRS
   edgecolor=trailcolours,  # set the edgecolor to be defined
   facecolor='none',  # hopefully stops the multi-line being filled in
-  linewidth=1.5)  # set the linewidth
+  linewidth=3)  # set the linewidth
 
 # add the species specific chloropleth grid and intersected trails to map
 ax.add_feature(grid_feat)  
@@ -242,7 +242,7 @@ toplist['SHAPE_Leng'] = toplist['SHAPE_Leng'].round(1) # round to 1 decimal poin
 # print(toplist) # troubleshoot if needed
 
 
-# Create the table. colour text in the table, same order as the trail geometry coloured + back for firsdt row (title)
+# Create the table. colour text in the table, same order as the trail geometry colours
 table_data = [[str(toplist['SHAPE_Leng'].iloc[i]) + 'km', str(toplist['name'].iloc[i])] for i in range(len(toplist))]
 table = ax.table(cellText=table_data, 
                  loc='upper left', 
