@@ -162,7 +162,7 @@ grid_sorted = grid_sort.sort_values(by=f'{userselected}', axis=0, ascending=Fals
 # a loop that will run down the sorted grid data, from highest species occupancy until a stopping at the 50th intersection
 # adapted from https://www.w3schools.com/python/python_for_loops.asp
 # the loop will run one-by-one through the 50 grids with the highest occupancy value appending a boolean dataset
-print('\nChecking hig occupancy grids for trails\n')
+print('\nChecking high occupancy grids for trails\n')
 found_intersection = False
 iteration = 1
 intersection_list = []
@@ -205,7 +205,7 @@ for sublist in intersection_list:
 # trim the list to 15
 print('\nIdentified track IDs in order of presence in higher bird occupany area')
 # print(intersect_id) # troubleshooting
-intersect_id_trimmed = intersect_id[:15]
+intersect_id_trimmed = intersect_id[:15] # reduce this to narrow down trails
 print(intersect_id_trimmed)
 
 

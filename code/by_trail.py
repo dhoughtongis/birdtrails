@@ -28,7 +28,7 @@ import matplotlib.patches as mpatches
 trails = gpd.read_file(os.path.abspath('data/Trails.shp'))
 
 
-print("\nWelcome to BirdTrials!\n\nThis is a tool that...") 
+print("\nWelcome to BirdTrials!\n") 
 print("\nIf you are unsure what trail you are interested in, you can use the TrailFinder or BirdFinder tools included in this package") 
 while True:
     # prompts user for a trail name

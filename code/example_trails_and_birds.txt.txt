@@ -1,5 +1,11 @@
+Trails:
 Milford Track
 Otago Central Rail Trail
 Routeburn Track
 Tongariro Alpine Crossing
 Heaphy Track
+
+Birds:
+kea (Kea)
+kiwbro (Kiwi species)
+weka (Weka)
